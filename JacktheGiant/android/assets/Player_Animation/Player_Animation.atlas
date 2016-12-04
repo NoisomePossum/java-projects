@@ -1,0 +1,55 @@
+
+Player_Animation.png
+size: 512,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Player
+  rotate: false
+  xy: 2, 129
+  size: 107, 125
+  orig: 107, 125
+  offset: 0, 0
+  index: 8
+Player
+  rotate: false
+  xy: 2, 2
+  size: 96, 125
+  orig: 96, 125
+  offset: 0, 0
+  index: 7
+Player
+  rotate: false
+  xy: 100, 2
+  size: 93, 125
+  orig: 93, 125
+  offset: 0, 0
+  index: 2
+Player
+  rotate: false
+  xy: 111, 129
+  size: 90, 125
+  orig: 90, 125
+  offset: 0, 0
+  index: 6
+Player
+  rotate: false
+  xy: 195, 2
+  size: 73, 125
+  orig: 73, 125
+  offset: 0, 0
+  index: 5
+Player
+  rotate: false
+  xy: 203, 129
+  size: 69, 125
+  orig: 69, 125
+  offset: 0, 0
+  index: 3
+Player
+  rotate: false
+  xy: 270, 2
+  size: 63, 125
+  orig: 63, 125
+  offset: 0, 0
+  index: 4
