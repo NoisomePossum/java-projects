@@ -22,7 +22,7 @@ public class CloudsController {
     private Array<Cloud> clouds = new Array<Cloud>();
     private Array<Collectable> collectables = new Array<Collectable>();
 
-    private final float DISTANCE_BETWEEN_CLOUDS = 250;
+    private final float DISTANCE_BETWEEN_CLOUDS = 250f;
     private float minX, maxX;
     private float lastCloudPositionY;
     private float cameraY;
@@ -31,8 +31,9 @@ public class CloudsController {
 
     public CloudsController(World world) {
         this.world = world;
-        minX = GameInfo.WIDTH / 2f - 130;
-        maxX = GameInfo.WIDTH / 2f + 130;
+//        this solution is a hack, need to find out why clouds aren't centered by default
+        minX = GameInfo.WIDTH / 2f - 220;
+        maxX = GameInfo.WIDTH / 2f + 70;
         createClouds();
         positionClouds(true);
     }
@@ -49,7 +50,6 @@ public class CloudsController {
             clouds.add(new Cloud(world, "Cloud_" + index));
             index++;
 
-//            possible improvement; set index to random number 1-3 instead of incrementing
             if(index == 4) {
                 index = 1;
             }
@@ -67,7 +67,7 @@ public class CloudsController {
         float positionY = 0;
 
         if(firstTimeArranging) {
-            positionY = GameInfo.HEIGHT / 2;
+            positionY = GameInfo.HEIGHT / 2f;
         } else {
             positionY = lastCloudPositionY;
         }
@@ -81,11 +81,11 @@ public class CloudsController {
                 float tempX = 0;
 
                 if(controlX == 0) {
-                    tempX = randomBetweenNumbers(maxX - 30, maxX);
+                    tempX = randomBetweenNumbers(maxX - 40, maxX);
                     controlX = 1;
                     c.setDrawLeft(false);
                 } else if(controlX == 1) {
-                    tempX = randomBetweenNumbers(minX + 30, minX);
+                    tempX = randomBetweenNumbers(minX + 40, minX);
                     controlX = 0;
                     c.setDrawLeft(true);
                 }
@@ -131,13 +131,7 @@ public class CloudsController {
 
     public void drawClouds(SpriteBatch batch) {
         for(Cloud c : clouds) {
-            if(c.getDrawLeft()) {
-                batch.draw(c, c.getX() - c.getWidth() / 2f - 20,
-                        c.getY() - 20);
-            } else {
-                batch.draw(c, c.getX() - c.getWidth() / 2f + 10,
-                        c.getY() - 20);
-            }
+            c.draw(batch);
         }
     }
 
@@ -145,7 +139,7 @@ public class CloudsController {
 
         for(Collectable c : collectables) {
             c.updateCollectable();
-            batch.draw(c, c.getX(), c.getY());
+            c.draw(batch);
         }
 
     }
@@ -162,7 +156,7 @@ public class CloudsController {
 
     public void createAndArrangeNewClouds() {
         for(int i = 0; i < clouds.size; i++) {
-            if((clouds.get(i).getY() - GameInfo.HEIGHT / 2f - 5) > cameraY) {
+            if((clouds.get(i).getY() - GameInfo.HEIGHT / 2f - 15) > cameraY) {
                 clouds.get(i).getTexture().dispose();
                 clouds.removeIndex(i);
             }

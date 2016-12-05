@@ -30,17 +30,20 @@ public class Cloud extends Sprite {
     }
 
     void createBody() {
+
+//        define body for clouds
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
-        bodyDef.position.set((getX()) / GameInfo.PPM,
-                getY() / GameInfo.PPM);
+        bodyDef.position.set((getX() + getWidth() / 2f) / GameInfo.PPM,
+                (getY() + getHeight() / 2f) / GameInfo.PPM);
 
         body = world.createBody(bodyDef);
 
+//        define shape and size of hit box
         PolygonShape shape = new PolygonShape();
         shape.setAsBox((getWidth() / 2f - 5) / GameInfo.PPM,
-                (getHeight() / 2f - 10) / GameInfo.PPM);
+                (getHeight() / 2f - 5) / GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
