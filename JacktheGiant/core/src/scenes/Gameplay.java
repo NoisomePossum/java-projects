@@ -3,6 +3,7 @@ package scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -61,6 +62,11 @@ public class Gameplay implements Screen, ContactListener {
     private Player player;
     private float lastPlayerY;
 
+    private Sound coinSound, lifeSound;
+
+    private float cameraSpeed = 10;
+    private float maxSpeed = 10;
+    private float acceleration = 10;
 
     public Gameplay(GameMain game) {
         this.game = game;
@@ -91,6 +97,11 @@ public class Gameplay implements Screen, ContactListener {
         player = cloudsController.positionThePlayer(player);
 
         createBackgrounds();
+
+        setCameraSpeed();
+
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Coin_Sound.wav"));
+        lifeSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Life_Sound.wav"));
     }
 
     void handleInput(float dt) {
@@ -120,7 +131,7 @@ public class Gameplay implements Screen, ContactListener {
 
         if(!GameManager.getInstance().isPaused) {
             handleInput(dt);
-            moveCamera();
+            moveCamera(dt);
             checkBackgroundOutOfBounds();
             cloudsController.setCameraY(mainCamera.position.y);
             cloudsController.createAndArrangeNewClouds();
@@ -131,8 +142,33 @@ public class Gameplay implements Screen, ContactListener {
     }
 
 //    Temporary function to cause the screen to continuously scroll down every frame
-    void moveCamera() {
-        mainCamera.position.y -= 1.5;
+    void moveCamera(float delta) {
+        mainCamera.position.y -= cameraSpeed * delta;
+
+        cameraSpeed += acceleration * delta;
+
+        if(cameraSpeed > maxSpeed) {
+            cameraSpeed = maxSpeed;
+        }
+    }
+
+    void setCameraSpeed() {
+
+        if(GameManager.getInstance().gameData.isEasyDifficulty()) {
+            cameraSpeed = 80;
+            maxSpeed = 100;
+        }
+
+        if(GameManager.getInstance().gameData.isMediumDifficulty()) {
+            cameraSpeed = 100;
+            maxSpeed = 120;
+        }
+
+        if(GameManager.getInstance().gameData.isHardDifficulty()) {
+            cameraSpeed = 120;
+            maxSpeed = 140;
+        }
+
     }
 
 //    Create an array of backgrounds and then set them on top of each other
@@ -325,7 +361,14 @@ public class Gameplay implements Screen, ContactListener {
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        for(int i = 0; i < bgs.length; i++) {
+            bgs[i].getTexture().dispose();
+        }
+        player.getTexture().dispose();
+        debugRenderer.dispose();
+        coinSound.dispose();
+        lifeSound.dispose();
     }
 
     @Override
@@ -344,6 +387,7 @@ public class Gameplay implements Screen, ContactListener {
         if(body1.getUserData() == "Player" && body2.getUserData() == "Coin") {
 //            collided with coin
             hud.incrementCoins();
+            coinSound.play();
             body2.setUserData("Remove");
             cloudsController.removeCollectables();
         }
@@ -351,6 +395,7 @@ public class Gameplay implements Screen, ContactListener {
         if(body1.getUserData() == "Player" && body2.getUserData() == "Life") {
 //            collided with coin
             hud.incrementLives();
+            lifeSound.play();
             body2.setUserData("Remove");
             cloudsController.removeCollectables();
         }
