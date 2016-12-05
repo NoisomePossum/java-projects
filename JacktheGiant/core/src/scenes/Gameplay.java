@@ -225,7 +225,7 @@ public class Gameplay implements Screen, ContactListener {
             }
         }
 
-        if(player.getX() - 25 > GameInfo.WIDTH || player.getX() + 25 < 0) {
+        if(player.getX() - 75 > GameInfo.WIDTH || player.getX() + 75 < 0) {
             if(!player.isDead()) {
                 playerDied();
             }
@@ -341,7 +341,13 @@ public class Gameplay implements Screen, ContactListener {
 
     @Override
     public void resize(int width, int height) {
-
+        gameViewport.update(width, height);
+        float box2DWidth = (float) width / GameInfo.PPM;
+        float box2DHeight = (float) height / GameInfo.PPM;
+        box2DCamera.viewportWidth = box2DWidth;
+        box2DCamera.viewportHeight = box2DHeight;
+        box2DCamera.position.set(box2DWidth / 2f, box2DHeight / 2f, 0); // center the box2DCamera
+        box2DCamera.update();
     }
 
     @Override

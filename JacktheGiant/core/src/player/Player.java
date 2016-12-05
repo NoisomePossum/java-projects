@@ -26,6 +26,7 @@ public class Player extends Sprite {
     private World world;
     private Body body;
 
+//    define variables for sprite animation for player
     private TextureAtlas playerAtlas;
     private Animation animation;
     private float elapsedTime;
@@ -43,16 +44,19 @@ public class Player extends Sprite {
 
     void createBody() {
 
+//        define body for player
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(getX() / GameInfo.PPM, getY() / GameInfo.PPM);
+        bodyDef.position.set((getX() + getWidth()) / GameInfo.PPM,
+                (getY() + getHeight()) / GameInfo.PPM);
 
         body = world.createBody(bodyDef);
         body.setFixedRotation(true);
 
+//        define shape and size of hit box
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox((getWidth() / 2f - 25) / GameInfo.PPM,
-                (getHeight() / 2f) / GameInfo.PPM);
+        shape.setAsBox((getWidth() / 2f - 20) / GameInfo.PPM,
+                (getHeight() / 2f - 5) / GameInfo.PPM);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 4; // this is the mass of the body
@@ -115,11 +119,11 @@ public class Player extends Sprite {
 
         if(body.getLinearVelocity().x > 0) {
 //            moving right
-            setPosition(body.getPosition().x * GameInfo.PPM,
+            setPosition(body.getPosition().x * GameInfo.PPM - getWidth(),
                     body.getPosition().y * GameInfo.PPM);
         } else if(body.getLinearVelocity().x < 0) {
 //            moving left
-            setPosition((body.getPosition().x) * GameInfo.PPM,
+            setPosition((body.getPosition().x) * GameInfo.PPM - getWidth(),
                     body.getPosition().y * GameInfo.PPM);
         }
 
